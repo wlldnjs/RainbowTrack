@@ -1,0 +1,32 @@
+package jsonService;
+
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import dao.PlaylistDao;
+
+public class DeleteSongService implements JsonService {
+
+	@Override
+	public String process(HttpServletRequest request) {
+		
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		String id = request.getParameter("id");
+		int boardIdx = Integer.parseInt(request.getParameter("boardIdx"));
+		
+		PlaylistDao playListDao = PlaylistDao.getInstance();
+		boolean check = playListDao.deletePlaylist(id, boardIdx);
+		String result = "{\"result\" : \"false\"}";
+		if (check) {
+			result = "{\"result\" : \"true\"}";
+		} 
+		return result;
+	}
+
+}

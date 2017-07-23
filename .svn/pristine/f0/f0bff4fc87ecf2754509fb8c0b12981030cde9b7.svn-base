@@ -1,0 +1,4 @@
+# BoardService 
+/jsp/main/boardWrite.bd=boardService.BoardWriteService
+/jsp/main/boardRead.bd=boardService.BoardReadService
+/jsp/main/search.bd=boardService.SearchService

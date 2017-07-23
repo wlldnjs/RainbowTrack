@@ -1,0 +1,89 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<script type="text/javascript">
+   function modify(modifyForm){
+      var modifyForm = document.modifyForm;
+      if(!modifyForm.pw.value){
+         alert("새 비밀번호를 입력하세요");
+         return false;
+      }
+      if(!modifyForm.phoneNum.value){
+         alert("새 전화번호를 입력하세요");
+         return false;
+      }
+      if(!modifyForm.email.value){
+          alert("새 이메일을 입력하세요");
+          return false;
+       }
+      return true;   
+   }
+</script>
+<div>
+<form action="../../UserController?command=image" enctype="multipart/form-data" method="post">
+   <table>
+      <tr>
+         <td><input type="hidden" name="user_id" value="<%=session.getAttribute("id") %>" /></td>
+         <td>프로필 사진 수정</td>
+         <td><input type="file" name="upload_image"></td>
+         <td><input type="submit" value="수정하기"></td>
+      </tr>
+      <tr>
+         <td><img id="my_image" src="${bean.image}" /></td>
+      </tr>
+   </table>
+</form>
+<form action="../../UserController?command=modify" onsubmit="return modify();" 
+   method="post" name="modifyForm">
+   <input type="hidden" name="user_id" value="<%=session.getAttribute("id") %>" />
+   <table>
+      <thead>
+         <tr>
+            <td colspan="2">계정설정</td>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td>아이디</td>
+            <td>${ bean.id }</td>
+         </tr>
+         <tr>
+            <td>이름</td>
+            <td>${ bean.name }</td>
+         </tr>
+         <tr>
+            <td>생년월일</td>
+            <td>${ bean.birth }</td>
+         </tr>
+         <tr>
+            <td>새 비밀번호</td>
+            <td><input type="text" name="pw"></td>
+         </tr>
+         <tr>
+            <td>새 비밀번호 재입력</td>
+            <td>일단 놔두고</td>
+         </tr>
+         <tr>
+            <td>새 연락처</td>
+            <td><input type="text" name="phoneNum" value="${ bean.phoneNum }"></td>
+         </tr>
+         <tr>
+            <td>새 이메일주소</td>
+            <td><input type="text" name="email" value="${ bean.email }"></td>
+         </tr>
+         <tr>
+            <td><input type="submit" value="수정하기"></td>
+         </tr>
+      </tbody>
+   </table>
+</form>
+<form action="../../UserController?command=resign" method="post">
+   <table>
+      <tr>
+         <td><input type="submit" value="탈퇴하기"/></td>
+      </tr>
+   </table>
+</form>
+</div>

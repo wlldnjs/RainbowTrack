@@ -1,0 +1,26 @@
+package jsonService;
+
+import javax.servlet.http.HttpServletRequest;
+
+import dao.UserDao;
+
+public class CheckIdService implements JsonService {
+
+	@Override
+	public String process(HttpServletRequest request) {
+		
+		String id = request.getParameter("id").trim();
+		System.out.println("CheckIdService id : " + id);
+		
+		UserDao userDao = UserDao.getInstance();
+		String result = "";
+		if (userDao.idCheck(id)) {
+			result = "{\"result\" : \"true\"}";
+		} else {
+			result = "{\"result\" : \"false\"}";
+		}
+		
+		return result;
+	}
+
+}

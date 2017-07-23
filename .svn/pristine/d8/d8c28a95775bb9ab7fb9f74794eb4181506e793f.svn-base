@@ -1,0 +1,18 @@
+<4월 21일 진행상황 보고>
+
+회원수정 폼 디자인 - 박형준
+
+회원수정 폼을 만들고 비밀번호, phoneNumber, email을 수정할수 있는 기능 완성(디자인x)- 윤진성
+
+UserDao.java / 유저서비스의 ModifyService.java , ResignService.java 추가 / 
+UserService.properties 수정 / 
+
+게시글, 댓글 삭제 기능 추가 / 회원정보 수정시 유저정보를 불러오는 GetUserInfoService class 내용 추가 - 백인호
+
+★지원☆
+플레이리스트 저장 완료
+PlaylistService.properties,
+PlaylistBean.java,
+PlaylistDao.java
+PlaylistInsertService.java
+그리고 BoardWriteService 약간수정

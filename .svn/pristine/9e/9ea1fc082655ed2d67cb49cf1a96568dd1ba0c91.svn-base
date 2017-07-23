@@ -1,0 +1,102 @@
+<%@page import="bean.PlaylistBean"%>
+<%@page import="playlistService.PlaylistArrayView"%>
+<%@page import="playlistService.PlaylistShowService"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<link rel="Stylesheet" href="../index/css/ui-lightness/jquery-ui-1.10.4.custom.css"/>
+<script src="../index/js/jquery-1.11.0.min.js"></script>
+<script src="../index/js/jquery-ui-1.10.4.custom.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#playlist_dialog").dialog({
+			autoOpen : false, //자동으로 열리지않게
+			position:[1500,140], //x,y  값을 지정
+			//"center", "left", "right", "top", "bottom"
+			/* resizable : false, */ //크기 조절 못하게
+			/* modal : true, */
+		});
+
+		$("#playlist_btn").on("click", function() {
+			$("#playlist_dialog").dialog("open");
+		});
+	});
+</script>
+<script type="text/javascript">
+var audio;
+var playlist;
+var tracks;
+var current;
+
+init();
+function init(){
+    current = 0;
+    audio = $('audio');
+    playlist = $('#playlist');
+    tracks = playlist.find('li a');
+    len = tracks.length - 1;
+    audio[0].volume = .10;
+    audio[0].play();
+    playlist.find('a').click(function(e){
+        e.preventDefault();
+        link = $(this);
+        current = link.parent().index();
+        run(link, audio[0]);
+    });
+    audio[0].addEventListener('ended',function(e){
+        current++;
+        if(current == len){
+            current = 0;
+            link = playlist.find('a')[0];
+        }else{
+            link = playlist.find('a')[current];    
+        }
+        run($(link),audio[0]);
+    });
+}
+function run(link, player){
+        player.src = link.attr('href');
+        par = link.parent();
+        par.addClass('active').siblings().removeClass('active');
+        audio[0].load();
+        audio[0].play();
+}
+</script>
+<div id="main_menu">
+	<div id="profile">
+		<a href="main.jsp"><img src="../../images/bono.jpg"></a><br>
+		<a href="main.jsp"><%= session.getAttribute("id") %></a>
+	</div>
+	<ul>
+		<li><a href="main.jsp?uri=followList.jsp">FOLLOW</a></li>
+		<li><button id="playlist_btn">PLAYLIST</button></li>
+		<li><a href="main.jsp?uri=mypage.jsp">MYPAGE</a></li>
+		<li><input type="button" value="LOGOUT" onclick="href:location='../../UserController?command=logout'"></li>
+	</ul>
+</div>
+
+<!-- playlist dialog -->
+<div id="playlist_dialog">
+<%
+	String user_id = String.valueOf(session.getAttribute("id"));
+	PlaylistShowService playlistShowService = PlaylistShowService.getInstance();
+	PlaylistArrayView viewData = playlistShowService.PlaylistShowService(user_id);
+	pageContext.setAttribute("viewData", viewData);
+%>
+<audio id="audio" preload="auto" tabindex="0" controls="controls" type="audio/mpeg">
+	<source src="#" type="audio/mp3">
+</audio>
+<nav role='navigation'>
+   <ul id="playlist">
+   <%if(viewData == null) {%>
+플레이리스트가 비어있습니다.
+<%} else { %>
+<%
+	for(PlaylistBean playlistBean : viewData.getPlaylistArray()) {
+%>
+	<li class="active"><a href="<%= playlistBean.getMusicFilePath()%>"><%=playlistBean.getMusicName() %></a></li>
+<%} %>
+<%} %>
+   </ul>
+</nav>
+</div>

@@ -1,0 +1,52 @@
+package jsonService;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import bean.BoardBean;
+import bean.ReplyBean;
+import boardService.BoardListView;
+import dao.BoardDao;
+import dao.ReplyDao;
+import net.sf.json.JSONObject;
+
+public class ShowBoardsService implements JsonService{
+
+	private static final int BOARD_COUNT_PER_PAGE = 10;
+	
+	@Override
+	public String process(HttpServletRequest request) {
+		
+		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		int currentPageNum = pageNum;
+		BoardDao boardDao = BoardDao.getInstance();
+		ReplyDao replyDao = ReplyDao.getInstance();
+		int boardTotalCount = boardDao.selectBoardCount();
+
+		List<BoardBean> boardList = null;
+		int firstRow = 0;
+		int endRow = 0;
+
+		if (boardTotalCount > 0) {
+			firstRow = (pageNum - 1) * BOARD_COUNT_PER_PAGE + 1;
+			endRow = firstRow + BOARD_COUNT_PER_PAGE - 1;
+			boardList = boardDao.getBoardList(firstRow, endRow);
+		}
+		
+		// reply를 가져와서 담는 부분.
+		for (int i = 0; i < boardList.size(); i++) {
+			BoardBean temBean = boardList.get(i);
+			
+			List<ReplyBean> replyBeanList = replyDao.getAllReply(temBean.getIdx());
+			temBean.setReplyBeanList(replyBeanList);
+			
+		}
+		
+		BoardListView listView = new BoardListView(boardList, boardTotalCount, currentPageNum, BOARD_COUNT_PER_PAGE, firstRow, endRow);
+		
+		
+		return null;
+	}
+
+}

@@ -1,0 +1,31 @@
+package jsonService;
+
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import dao.BoardDao;
+import dao.ReplyDao;
+
+public class DeleteBoardService implements JsonService {
+
+	@Override
+	public String process(HttpServletRequest request) {
+
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		int board_idx = Integer.parseInt(request.getParameter("boardIdx").trim());
+		BoardDao boardDao = BoardDao.getInstance();
+		ReplyDao replyDao = ReplyDao.getInstance();
+		
+		replyDao.deleteAllReplyByIdx(board_idx);
+		boardDao.deleteBoardByIdx(board_idx);
+		
+		return "{\"result\" : \"success\"}";
+	}
+
+}

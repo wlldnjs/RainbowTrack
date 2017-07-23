@@ -1,0 +1,3 @@
+addLike=jsonService.AddLikeService
+deleteLike=jsonService.DeleteLikeUserService
+showBoards=jsonService.ShowBoardsService

@@ -1,0 +1,141 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+import bean.PlaylistBean;
+import db.DBAction;
+import util.JdbcUtil;
+
+public class PlaylistDao {
+
+	DBAction db = DBAction.getInstance();
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	ResultSet rs = null;
+	String sql = null;
+	
+	private static PlaylistDao instance;
+	
+	public static PlaylistDao getInstance() {
+		if (instance == null) {
+			instance = new PlaylistDao();
+		}
+		return instance;
+	}
+	
+	/**
+	 * 플레이리스트에 음악을 삽입하는 메소드
+	 */
+	public void insertPlaylist(PlaylistBean bean){
+		sql = "insert into RT_playlist(id, musicName, musicFilePath, board_Idx) "
+				+ "values(?,?,(select musicfilepath from rt_board where idx=?),?)";
+		try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, bean.getId());
+			pstmt.setString(2, bean.getMusicName());
+			pstmt.setInt(3, bean.getBoard_idx());
+			pstmt.setInt(4, bean.getBoard_idx());
+			pstmt.executeQuery();
+		} catch(SQLException e){
+			System.out.println("playlist insert Error : " +e.getMessage());
+		} finally{
+			JdbcUtil.close(pstmt);
+		}
+	}
+	
+	/**
+	 * ResultSet을 통해 PlaylistBean 객체를 생성하는 메소드.
+	 * ResultSet객체를 파라미터 값으로 받는다.
+	 * 생성한 PlaylistBean 객체를 return.
+	 */
+	protected PlaylistBean getPlaylistBeanFromResultSet(ResultSet rs){
+		PlaylistBean playlistBean = new PlaylistBean();
+		try{
+			playlistBean.setId(rs.getString("id"));
+			playlistBean.setMusicFilePath(rs.getString("MusicFilePath"));
+			playlistBean.setMusicName(rs.getString("MusicName"));
+			playlistBean.setBoard_idx(rs.getInt("board_idx"));
+		} catch(SQLException e){
+			System.out.println("getPlaylistBeanFromResultSet method 에러 : " +e.getMessage());
+		}
+		return playlistBean;
+	}	
+	
+	/**
+	 * 모든 플레이리스트를 collection(vector)에 담아서 리턴한다.
+	 */
+	public List<PlaylistBean> selectPlaylist(String userId){
+		sql = "select * from RT_playlist where id=? order by INSERTTIME desc";
+		try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()){
+				List<PlaylistBean> playlistArray = new Vector<PlaylistBean>();
+				do {
+					playlistArray.add(getPlaylistBeanFromResultSet(rs));
+				} while(rs.next());
+				return playlistArray;
+			}
+		} catch(SQLException e){
+			System.out.println("selectPlaylist method 에러 :"+e.getMessage());
+		} finally{
+			JdbcUtil.close(rs);
+			JdbcUtil.close(pstmt);
+		}
+		return Collections.emptyList();
+	}
+	
+	/**
+	 * 회원 탈퇴시 플레이리스트 지워주는 메소드.
+	 */
+	public void deleteListById(String id) {
+		
+		sql = "delete from rt_playlist where id = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println("deleteListById 에러 :"+e.getMessage());
+		} finally{
+			JdbcUtil.close(pstmt);
+		}
+		
+	}
+	
+	/**
+	 * 플레이리스트를 지워주는 메소드
+	 */
+	public boolean deletePlaylist(String id, int board_idx){
+		sql = "delete from rt_playlist where id=? and board_idx=?";
+		
+		try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setInt(2, board_idx);
+			int result = pstmt.executeUpdate();
+			if (result > 0) {
+				return true;
+			}
+		} catch(SQLException e){
+			System.out.println("deletePlaylist 에러 : " +e.getMessage());
+		} finally{
+			JdbcUtil.close(pstmt);
+		}
+		return false;
+	}
+	
+}

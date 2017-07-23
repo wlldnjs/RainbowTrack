@@ -1,0 +1,26 @@
+package boardService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.ServiceBean;
+import dao.ReplyDao;
+
+public class ReplyDeleteService implements BoardService {
+
+	@Override
+	public ServiceBean process(HttpServletRequest request, HttpServletResponse response) {
+		
+		int board_idx = Integer.parseInt(request.getParameter("board"));
+		int reply_idx = Integer.parseInt(request.getParameter("reply"));
+		
+		ServiceBean serviceBean = new ServiceBean();
+//		serviceBean.setViewPage("jsp/main/main.jsp"); // TODO url pattern Àû¿ë Áß.
+		serviceBean.setViewPage("main.jsp");
+		ReplyDao dao = ReplyDao.getInstance();
+		dao.deleteReply(board_idx, reply_idx);
+		
+		return serviceBean;
+	}
+
+}

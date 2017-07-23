@@ -1,0 +1,79 @@
+package boardService;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.BoardBean;
+import bean.ReplyBean;
+import bean.ServiceBean;
+import dao.BoardDao;
+import dao.ReplyDao;
+
+public class SearchService implements BoardService {
+
+	private static final int BOARD_COUNT_PER_PAGE = 10;
+
+	@Override
+	public ServiceBean process(HttpServletRequest request, HttpServletResponse response) {
+
+		int pageNumber = Integer.parseInt(request.getParameter("pageNum"));
+		
+		BoardDao boardDao = BoardDao.getInstance();
+		ReplyDao replyDao = ReplyDao.getInstance();
+		List<BoardBean> boardList = null;
+		ServiceBean serviceBean = new ServiceBean();
+
+		String search = request.getParameter("search");
+		char hash = search.charAt(0);
+
+		if (hash != 35) {
+
+			int currentPageNum = 1;
+			int boardTotalCount = boardDao.selectBoardCount();
+
+			int firstRow = 0;
+			int endRow = 0;
+
+			if (boardTotalCount > 0) {
+				firstRow = (pageNumber - 1) * BOARD_COUNT_PER_PAGE + 1;
+				endRow = firstRow + BOARD_COUNT_PER_PAGE - 1;
+				boardList = boardDao.getBoardListFromId(search, firstRow, endRow);
+
+				if (boardList == null) {
+					return null; // TODO 검색한 아이디와 일치하는 아이디가 없다.
+				}
+				
+			}
+
+			// reply를 가져와서 담는 부분.
+			for (int i = 0; i < boardList.size(); i++) {
+				BoardBean temBean = boardList.get(i);
+
+				List<ReplyBean> replyBeanList = replyDao.getAllReply(temBean.getIdx());
+				temBean.setReplyBeanList(replyBeanList);
+
+			}
+
+			BoardListView viewList = new BoardListView(boardList, boardTotalCount, currentPageNum, BOARD_COUNT_PER_PAGE,
+					firstRow, endRow);
+			serviceBean.setListView(viewList);
+			serviceBean.setViewPage("jsp/main/main.jsp?uri=userBoard.jsp");
+			
+			return serviceBean;
+			
+		} else {
+			boardList = boardDao.getBoardListFromHashtag(search);
+			if (boardList == null) {
+				return null; // TODO 검색한 해쉬택과 일치하는 해쉬택이 없다.
+			} else {
+
+			}
+
+		}
+
+		return null;
+	}
+
+}

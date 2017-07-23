@@ -1,0 +1,10 @@
+# UserService 
+login=userService.LoginService
+logout=userService.LogoutService
+regist=userService.RegistService
+checkId=userService.CheckIdService
+modify=userService.ModifyService
+getInfo=userService.GetUserInfoService
+resign=userService.ResignService
+image=userService.ImageService
+following=userService.FollowingService

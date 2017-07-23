@@ -1,0 +1,27 @@
+package userService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import bean.UserBean;
+import dao.UserDao;
+
+public class GetUserInfoService implements UserService{
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+		
+		HttpSession session = request.getSession(false);
+		String id = (String) session.getAttribute("id");
+		
+		UserBean bean = new UserBean();
+		UserDao dao = UserDao.getInstance();
+		bean = dao.selectUser(id);
+		
+		session.setAttribute("bean", bean);
+		
+		return "jsp/main/main.jsp?uri=mypage.jsp";
+	}
+
+}

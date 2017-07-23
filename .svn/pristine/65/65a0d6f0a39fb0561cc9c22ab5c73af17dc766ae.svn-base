@@ -1,0 +1,38 @@
+<%@page import="dao.UserDao"%>
+<%@page import="bean.UserBean"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+	<form action="boardWrite.bd" method="post"
+		enctype="multipart/form-data">
+		<input type="hidden" name="user_id" value="${ sessionScope.id }" />
+
+		<table cellpadding="5">
+			<tr>
+				<td><img width="25px" height="25px" src="../../images/lucio.jpg">
+					${ sessionScope.id }님의 메세지 쓰기</td>
+			</tr>
+			<tr>
+				<td><textarea rows="15px" cols="80px" name="board"
+						placeholder="내용을 입력해 주세요."></textarea></td>
+			</tr>
+			<tr>
+				<td><input type="text" size="70" name="hashTags"
+					placeholder="#해쉬태그" /></td>
+			</tr>
+			<tr>
+				<td><input type="file" name="upload_file"></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="submit" value="게시" /> <input
+					type="reset" value="다시쓰기" /></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

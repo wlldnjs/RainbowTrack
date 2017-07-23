@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div id="main_header">
+	<div id="header_wrap">
+		<div id="logo">
+			<h2 class="hidden">로고 이미지</h2>
+			<a href="main.jsp"><img alt="" src="../../images/RainbowTrack.png"></a>
+		</div>
+		<div id="search">
+		<form method="get">
+			<div class="box">
+			  <input class="search" type="text" placeholder="Search" />
+			  <input class="submit" type="submit" value="⌕"/>
+			</div>
+		</form>
+		</div>
+		<!-- <div id="search">
+			<input type="text" placeholder="#해시태그 검색" id="input_text"> 
+			<input type="button" value="⌕" id="input_button" onclick="">
+		</div> -->
+	</div>
+</div>

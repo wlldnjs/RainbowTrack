@@ -1,0 +1,32 @@
+package userService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
+
+import boardService.SearchService;
+import dao.FollowDao;
+
+public class FollowingService implements UserService{
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+		String id = request.getParameter("id");		//현재 사용자의 아이디
+		String follow = request.getParameter("follow");  //내가 팔로잉 할 사람의 아이디
+		String viewPage = "jsp/main/search.bd?search=" +follow;
+		FollowDao dao = FollowDao.getInstance();
+		boolean check = dao.checkFollowing(id, follow);
+		if(check){
+			dao.deleteFollow(id, follow);
+			System.out.println(id + "님이 " + follow +"님에게 팔로잉을 취소 합니다");
+		} else{
+			dao.insertFollow(id, follow);
+			System.out.println(id + "님이 " + follow +"님을 팔로잉 합니다");
+			//viewPage = "jsp/main/search.bd?search=" +follow +"&follow=true";
+//			viewPage = "jsp/main/search.bd?check=" +follow +"&follow=true";
+		}
+		return viewPage;
+	}
+
+}

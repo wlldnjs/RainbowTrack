@@ -1,0 +1,24 @@
+<%@page import="bean.FollowBean"%>
+<%@page import="userService.FollowListView"%>
+<%@page import="userService.FollowListService"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<div id="follow">
+<%
+	request.setCharacterEncoding("utf-8");
+	String myId = String.valueOf(session.getAttribute("id"));
+%>
+<h4>팔로워</h4>
+<%
+	FollowListService followListService = new FollowListService();
+	System.out.println("팔로우리스트 생성" +myId);
+	FollowListView followerData = followListService.FollowerListService(myId);
+	System.out.println("팔로우데이터 생성");
+	pageContext.setAttribute("followerData", followerData);
+	System.out.println("팔로우리스트 세팅");
+%>
+
+
+
+</div>

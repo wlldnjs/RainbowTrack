@@ -1,0 +1,134 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<link rel="Stylesheet" href="css/ui-lightness/jquery-ui-1.10.4.custom.css"/>
+
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src="js/jquery-ui-1.10.4.custom.js"></script>
+<script type="text/javascript">
+   function checkLogin(loginForm){
+      var loginForm = document.loginForm;
+      if(!loginForm.id.value){
+         alert("아이디를 입력하세요");
+         return false;
+      }
+      if(!loginForm.pw.value){
+         alert("비밀번호를 입력하세요");
+         return false;
+      }
+      return true;   
+   }
+</script>
+<script type="text/javascript">
+	function checkJoin(joinForm) {
+		var joinForm = document.joinForm;
+		/* RegExp는 정규식 검색을 위한 패턴을 정의한다. 자바스크립트 교재 385p. */
+		var regExp = /[0-9a-zA-Z][_0-9a-zA-Z-]*@[_0-9a-zA-Z-]+(\.[_0-9a-zA-Z-]+){1,2}$/;
+		var email = joinForm.email.value;
+		
+		if (!joinForm.id.value) {
+			alert("아이디를 입력하세요");
+			return false;
+		}else if (!joinForm.pw.value) {
+			alert("비밀번호를 입력하세요");
+			return false;
+		}else if (!joinForm.name.value) {
+			alert("이름을 입력하세요");
+			return false;
+		}else if(!email.match(regExp)){
+			alert("이메일 형식이 맞지않습니다");
+			return false;
+		}
+		else{	
+			return true;			
+		}
+	}
+</script>
+<script>
+	$(function(){
+		$(".login-page").dialog({
+			autoOpen:false, //자동으로 열리지않게
+            //position:[100,200], //x,y  값을 지정
+            //"center", "left", "right", "top", "bottom"
+            resizable:false, //크기 조절 못하게
+			modal:true,
+            
+			show:{
+				effect:"blind",
+				duration: 350
+			},
+			hide:{
+				effect:"blind",
+				duration: 350
+			},
+			
+			buttons: {
+		        close: function() {
+		          $( this ).dialog( "close" );
+		        }
+		      }
+		});
+		
+		$("#login_btn").on("click", function(){
+			$("#login_dialog").dialog("open");
+		});
+		
+		$("#join_btn").on("click", function(){
+			$("#join_dialog").dialog("open");
+		});
+	});
+</script>
+<script>
+	$(function (){
+		$("#calendar").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true,
+			showAnimation: 'blind',
+			showOtherMonths: true,
+			selectOtherMonths: true,
+			dateFormat: "yy/mm/dd",
+			yearRange: '-100: +1'
+		});
+	});
+</script>
+
+<div id="index_header">
+	<h1 class="hidden">상단 이미지</h1>
+	<div id="membership">
+		<h2 class="hidden">멤버쉽네비게이션</h2>
+		<ul>
+			<!-- <li><a href="index.jsp?uri=loginForm.jsp">LOGIN</a></li> -->
+			<li><button id="login_btn" class="index_btn">LOGIN</button></li>
+			<li>&nbsp;&nbsp;&nbsp;</li>
+			<li><button id="join_btn" class="index_btn">JOIN</button></li>
+		</ul>
+	</div>
+</div>
+
+<!-- 로그인 폼 -->
+<div class="login-page" id="login_dialog" >
+  <div class="form">
+    <form action="../../UserController?command=login" method="post" name="loginForm"
+ 	 	onsubmit="return checkLogin();" class="login-form">
+      <input type="text" placeholder="id" name="id" />
+      <input type="password" placeholder="password" name="pw" />
+      <input type="submit" value="로그인" class="button"/>
+    </form>
+  </div>
+</div>
+
+<!-- 회원가입 폼 -->
+<div class="login-page" id="join_dialog">
+  <div class="form">
+    <form action="../../UserController?command=regist" method="post" name="joinForm"
+		onsubmit="return checkJoin();" class="register-form">
+      <input type="text" placeholder="id" name="id"/>
+      <input type="password" placeholder="password" name="pw"/>
+      <input type="text" placeholder="name" name="name" />
+      <input type="text" placeholder="phone number" name="phoneNum" />
+      <input type="text" placeholder="email address" name="email"/>
+      <input type="text" placeholder="date of birth" name="birth" id="calendar" readonly="readonly"/>
+      <input type="submit" value="가입하기" class="button"/>
+    </form>
+  </div>
+</div>

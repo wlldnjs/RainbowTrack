@@ -1,0 +1,28 @@
+package userService;
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.UserDao;
+
+
+public class CheckIdService implements UserService {
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+		
+		String id = request.getParameter("id");
+		String viewPage = null;
+		
+		UserDao dao = new UserDao();
+		if (dao.idCheck(id)) {
+			viewPage = "fine";
+		} else {
+			viewPage = "no";
+		}
+		
+		return viewPage;
+	}
+	
+}

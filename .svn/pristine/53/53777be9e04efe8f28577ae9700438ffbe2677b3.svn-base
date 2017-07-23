@@ -1,0 +1,24 @@
+package boardService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BoardDao;
+import dao.ReplyDao;
+
+public class BoardDeleteService implements BoardService {
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+		
+		int board_idx = Integer.parseInt(request.getParameter("board"));
+		BoardDao boardDao = BoardDao.getInstance();
+		ReplyDao replyDao = ReplyDao.getInstance();
+
+		replyDao.deleteAllReplyByIdx(board_idx);
+		boardDao.deleteBoardByIdx(board_idx);
+		
+		return "jsp/main/main.jsp";
+	}
+
+}

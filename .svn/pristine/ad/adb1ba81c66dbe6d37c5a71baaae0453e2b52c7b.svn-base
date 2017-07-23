@@ -1,0 +1,201 @@
+<%@page import="boardService.BoardListView"%>
+<%@page import="boardService.BoardReadService"%>
+<%@page import="bean.*"%>
+<%@page import="java.io.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<style>
+ #aPlayer > audio { width: 100% }
+        /* Chrome 29+ */
+@media screen and (-webkit-min-device-pixel-ratio:0)
+  and (min-resolution:.001dpcm) {
+       /* HIDE DOWNLOAD AUDIO BUTTON */
+     #aPlayer {
+           overflow: hidden;width: 390px; 
+        }
+
+    #aPlayer > audio { width: 420px; }
+}
+
+/* Chrome 22-28 */
+@media screen and(-webkit-min-device-pixel-ratio:0) {
+    
+      #aPlayer {
+           overflow: hidden;width: 390px; 
+        }
+
+    #aPlayer > audio { width: 420px; }
+}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+   
+<body>
+<div id="main_board">
+<jsp:include page="../main/boardWrite.jsp"></jsp:include>
+
+<c:if test="${ param.check != null }" >
+<c:if test="${ param.check != sessionScope.id}" >
+<!-- 팔로우 기능 -->
+<form action="../../UserController?command=following" method="post">
+<input type="hidden" name="id" value="<%=session.getAttribute("id")%>"/>
+<input type="hidden" name="follow" value="<%=request.getParameter("check")%>"/>
+<%if(request.getParameter("follow").equals("true")) {%>
+<input type="submit" value="팔로우 끊기">
+<%} else if((request.getParameter("follow").equals("false"))){ %>
+<input type="submit" value="팔로우">
+<%} else{%>
+<input type="submit" value="팔로우 끊기">
+<%}%>
+</form>
+</c:if>
+</c:if>
+
+<c:if test="${ listView.boardList == null }">
+게시글이 없습니다.
+</c:if>
+<c:if test="${ listView.boardList != null }">
+<c:forEach var="boardBean" items="${ listView.boardList }">
+
+   <table>
+      <tr class="${ boardBean.idx }">
+         <form id="frm">
+         <c:if test="${ boardBean.image != null }" >
+         <td><img width="25px" height="25px" src="${ boardBean.image }"></td>
+         </c:if>
+         <c:if test="${ boardBean.image == null }" >
+         <td><img width="25px" height="25px" src="http://210.123.255.149:8080/rt_img/default_image.png"></td>
+         </c:if>
+         <td>${ boardBean.user_id }          ${ boardBean.boardDate }</td>
+         <!-- <td><i id="like" class="fa fa-heart" aria-hidden="true"></i></td> -->
+         <td><i id="like" class="fa fa-heart-o" aria-hidden="true"></i></td>
+         <td><input type="hidden" id="user_id" value="${ bean.id }"></td>
+         <td><input type="hidden" id="boardIdx" name="board_idx" value="${ boardBean.idx }" ></td>
+         <td><input type="button" value="담기" onclick="insertMusic(document.getElementById('user_id').value,boardIdx)"></td>
+         <c:if test="${ sessionScope.id == boardBean.user_id }">
+            <td><a href='boardDelete.bd?board=${ boardBean.idx }'>삭제</a></td>
+         </c:if>
+         </form>
+      </tr>
+      <tr class="${ boardBean.idx }">
+         <td colspan=3>${ boardBean.board }</td>
+      </tr>
+      <tr class="${ boardBean.idx }">
+         <td colspan=3><div id="aPlayer"><audio controls="controls" preload="none"  type="audio/mpeg" src="${ boardBean.musicFilePath }"></div></td>
+      </tr>
+      <tr class="${ boardBean.idx }">
+         <td>해시태그</td>
+         <td colspan=2>${ boardBean.hashTags }</td>
+      </tr>
+      <tr>
+         <td colspan=3>좋아요 ${ boardBean.likeUser }</td>
+      </tr>
+      <c:forEach var="replyBean" items="${ boardBean.replyBeanList }">
+         <tr class="${ boardBean.idx }">
+            <td>${ replyBean.user_id }</td>
+            <td>${ replyBean.reply }</td>
+            <td>${ replyBean.replyDate }</td>
+            <c:if test="${ sessionScope.id == replyBean.user_id }">
+               <td><a href='replyDelete.bd?board=${ replyBean.board_idx }&reply=${ replyBean.reply_idx }' >삭제</a></td>
+            </c:if>
+         </tr>
+      </c:forEach>
+   <form action="replyWrite.bd" method="post" >
+      <input type="hidden" id="board_idx" name="board_idx" value="${ boardBean.idx }" >
+      <tr class="${ boardBean.idx }">
+         <td><%=session.getAttribute("id") %></td>
+         <td><input type="text" placeholder="댓글을 입력하세요.." name ="reply" class="placeholder"></td>
+         <td><input type="submit" value="쓰기"></td>
+      </tr>
+   </form>
+</table>
+</c:forEach>
+</c:if>
+
+
+<!-- 더보기 버튼 -->
+<button id="showMoreBtn" type="button" name="">더보기</button>
+
+</div>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script type="text/javascript">
+   function insertMusic(user_id,board_idx){
+      var id = user_id;
+      var idx = board_idx.value;
+      var name = prompt("저장할 제목을 입력해 주세요.")
+      location.href = "../../PlaylistController?command=insertList&id=" +id +"&idx=" +idx +"&name=" +name;
+   }
+   
+</script>
+<script>
+	
+	var pageNum = 1;
+	
+	$.ready();
+
+	
+	$('i').click(function () {
+		
+		var i = $(this);
+		var boardIdx = $(this).parent().next().next().children().val(); // filter 써서 했는데 코드가 좀 지저분해서 나중에 바꿀 수 있으면 바꿔야지.
+		var user_id = $("#user_id").val();	
+		
+		console.log(i.attr("class"));
+		if (i.attr("class") == "fa fa-heart-o") {
+		
+			$.ajax({
+				url : "../../JsonController/addLike",
+				type : "POST",	
+				contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				data : {
+					"boardIdx" : boardIdx,
+					"user_id" : user_id
+				},
+				dataType : "json",
+				success: function(jsonData, textStatus, jqXHR) {
+// 					test code
+					console.log(jsonData);
+					var jsonString = JSON.stringify(jsonData);
+					console.log(jsonString);
+// 					var jsonAll = JSON.parse(jsonString);  이건 안되고 밑에 parseJSON 은 되네..
+					var jsonAll = $.parseJSON(jsonString);
+					var jsonBoard = jsonAll.jsonBoard;
+					console.log(jsonBoard);
+//           		test code end 
+					if (jsonData != null) {
+						$(i).removeClass("fa fa-heart-o").addClass("fa fa-heart");
+					}
+				},
+				error: function(xhr, status, error) {
+					alert("에러발생");
+					console.log(status);
+					console.log(xhr);
+					console.log(error);
+				}			
+			}); // end ajax 
+		}
+	}); 
+	
+	function showBoards() {
+		
+		var board = "";
+		
+	}
+	
+	
+	$("#showMoreBtn").click(function () {
+		alert("test");
+	});
+	
+</script>
+
+</body>
+</html>

@@ -1,0 +1,572 @@
+/*초기화*/
+body, ul, h1, h2, h3, h4, h5, p, dl, dd { margin : 0; padding : 0; }
+li { list-style : none; }
+a { text-decoration : none; }
+img { border : 0; }
+address { font-style : normal; }
+small { font-size : 1em; }
+hr { display : none; }
+.hidden { position : absolute; left : -9999px; }
+
+/*
+ * Hanna (Korean) http://www.google.com/fonts/earlyaccess
+ */
+@font-face {
+  font-family: 'Hanna';
+  font-style: normal;
+  font-weight: 400;
+  src: url(//fonts.gstatic.com/ea/hanna/v3/BM-HANNA.eot);
+  src: url(//fonts.gstatic.com/ea/hanna/v3/BM-HANNA.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/hanna/v3/BM-HANNA.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/hanna/v3/BM-HANNA.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/hanna/v3/BM-HANNA.ttf) format('truetype');
+}
+/*
+* Noto Sans KR (korean) http://www.google.com/fonts/earlyaccess
+ */
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 100;
+  src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 300;
+  src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');
+}
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 400;
+   src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');
+ }
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 500;
+   src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');
+ }
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 700;
+   src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');
+ }
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 900;
+   src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
+ }
+
+/* 회색 */
+body { 
+	background: #F6F6F6;
+	font-family: 'Noto Sans KR', sans-serif;
+	}
+
+/* 폰트 */
+@import url( "http://fonts.googleapis.com/earlyaccess/notosanskr.css" );
+
+/* main header */
+#main_header { width: 100%; height: 75px;
+			 border: 1px solid #f44336;
+			 background: #f44336;
+			 z-index: 9999;
+			 position: fixed;
+			 }
+			 
+#header_wrap { width: 980px;
+			position: relative;
+			z-index: 9999px;
+			margin: 0 auto;
+}
+
+#link {
+	position: absolute;
+	top: 30px;
+	right: 10px;
+	z-index: 9999px;
+}
+#link ul li {
+	float: left;
+	margin-left: 9px;
+}
+
+.link_img {
+	background: #fff;
+	width: 40px; height: 40px;
+	border-radius: 50%;
+}
+
+/* search box */
+#search {
+		position: absolute;
+		right: 300px; top: 20px;}
+.box {
+	width: 412px;
+	height:40px;
+	border-style:solid; 
+	border-width:1px;
+	border-color:#ffffff;
+	position: relative;
+}
+
+.search{
+	font-size: 15px;
+	padding: 0 15px;
+	height: 100%;
+	border: none;
+	background: transparent;
+	highlight-color: #ffffff;
+	width: 300px;
+	float: left;
+	color: #fff;
+}
+.submit {
+	position: absolute;
+	font-size: 30px;
+	padding: 0 15px;
+	border: none;
+	bottom: 3px;
+}
+
+textarea, input {
+	font-family:"open sans", sans-serif;
+}
+
+.submit {
+	font-weight: 500;
+	background: transparent;
+	color:#ffffff;
+	height:100%;
+	width:25%;
+	float:right;
+	transition: all 100ms ease-in-out;
+	text-align: center;
+	vertical-align: middle;
+}
+
+input::-webkit-input-placeholder { 
+	color:#fff;
+	font-family:"open sans", sans-serif;
+	}
+.placeholder::-webkit-input-placeholder {
+	color:#c0c0c0;
+	font-family:"open sans", sans-serif;
+}
+
+/* 메뉴와 보드를 감싸는 div */	
+#main_wrap { width: 980px; margin: 0 auto;/*  margin-top: 30px;  */
+			padding-top: 115px;
+			overflow: hidden;
+			}
+
+/* main menu */
+#main_menu { width: 250px; height: 450px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			float: left;
+			background: #ffffff;
+			position: fixed;
+			}
+#my_image { width: 80px; height: 80px; border-radius: 50%;
+	margin-left: 85px; margin-top: 10px;
+}
+
+.myId {
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+	color: black;
+	font-size: 20px;
+}
+#profile {
+	padding-bottom: 30px;
+}
+
+.menulist {
+	margin-top: 10px;
+}
+
+/* 팔로워 리스트 */
+.fade {float: right; width: 550px;
+	 overflow: hidden;}
+
+.fade .tabs {
+	float: left; overflow: auto;
+}
+
+.fade .tabs li {
+	float: left; 
+	border: 1px solid #f44336;
+	color: #ffffff;
+    padding: 8px 20px;
+	margin: 0px 7px 7px 7px;
+	border-radius: 4px;
+	background: white;
+}
+
+.fade .tabs li a {
+	display: block; float: left; 
+	width: 100px; height: 25px;
+	text-align: center;
+	color: #000;
+}
+.fade .tabs li:hover {
+	border: 1px solid #0080ff;
+}
+.fade .tabs li a.selected {
+	color: #f44336;	
+}
+
+.fade .items {
+	clear: both;
+	position: relative;
+	top: 0; left: 0;
+	height: 800px;
+}
+.fade .items div {
+	width: 100%;
+	position: absolute;
+	height: 800px;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:200);
+@import url(http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css);
+.snip1578 {
+  font-family: 'Open Sans', Arial, sans-serif;
+  position: relative;
+  display: inline-block;
+  margin: 20px 8px;
+  /* min-width: 230px;
+  max-width: 315px;
+  width: 100%; */
+  width: 230px;
+  color: #000;
+  text-align: left;
+  font-size: 16px;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.snip1578 *,
+.snip1578 {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+.snip1578 img {
+  width: 80px; height: 80px; border-radius: 50%;
+  margin-top: -15px;
+  margin-left: 60%;
+  margin-bottom: 15px;
+  backface-visibility: hidden;
+  vertical-align: top;
+}
+
+.snip1578 figcaption {
+  position: absolute;
+  top: 0;
+  right: 40%;
+  left: 0;
+  bottom: 0;
+  padding: 15px;
+}
+
+.snip1578 h3 {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: normal;
+}
+
+.snip1578 .icons {
+  font-size: 1.6rem;
+}
+
+.snip1578 .icons a {
+  color: #ccc;
+}
+
+.snip1578 .icons a:hover {
+  color: #2980b9;
+}
+
+/* PlayList css */
+#playlist{margin-top:-2px;}
+.active a{color:#5DB0E6;}
+#playlist li a{color:#eeeedd;background:#333;padding:5px;display:block;text-decoration:none;}
+#playlist li a:hover{color:#5DB0E6;}
+
+/* 마이페이지 */
+#mypage {
+	float: right;
+	}
+	
+#user_img {
+	padding-top: 10px;
+	width: 82px;
+	margin: 0 auto;
+}
+#modify_img {
+	width: 550px;
+	border: 1px solid #ccc; border-radius: 4px;
+	margin-bottom: 30px;
+	background: #ffffff
+}
+#current_image {
+	width: 80px; height: 80px; border-radius: 50%;
+}
+#img_change {
+	padding-top: 10px;
+	
+}
+.input_file_my {
+	margin-top: 10px;
+}
+.button_css_mypage {
+	background: #f44336;
+	border-radius: 4px;
+	color: #ffffff;
+	margin-bottom: 8px;
+	margin-left: 230px;
+	margin-top: 10px;
+}
+#mypage p {
+	margin-left: 10px;
+}
+
+/* main board */
+#main_board {
+			float: right;
+			font-family: 'Noto Sans KR', sans-serif;
+			}
+			
+#board_write {
+	width: 550px;
+	border: 1px solid #ccc; border-radius: 4px;
+	margin-bottom: 30px;
+	background: #ffffff
+}
+
+table { /* height: 50px; */ width: 550px;/*  margin: 0 auto; */
+		border: 1px solid #ccc; border-radius: 4px;
+		margin-bottom: 30px;
+		background: #ffffff}
+
+
+
+/* 파일 업로드 */
+.file_input_textbox {
+	float: left;
+}
+.file_input_textbox::-webkit-input-placeholder {
+	color:#c0c0c0;
+	font-family:"open sans", sans-serif;
+}
+
+.file_input_div {
+	position: relative;
+	width: 100px;
+	height: 25px;
+	overflow: hidden;
+}
+
+.file_input_button {
+	width: 100px;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	background-color: #f44336;
+	color: #ffffff;
+	border-style: solid;
+}
+
+.file_input_hidden {
+	font-size: 45px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	opacity: 0;
+}
+
+/* 위로가기 버튼 */
+.ac-sub-go-top {
+	width: 60px;
+	height:60px;
+	position: fixed;
+	display: inline-block;
+	background: url(../../images/bono.jpg) no-repeat;
+	text-indent: -9999px;
+	border: none;
+	display: none;
+}
+
+/* 검색된 유저의 board */
+#userInfo {
+}
+.follow_btn{
+	width: 100px; height: 30px;
+	background: #f44336;
+	border-radius: 4px;
+	color: #ffffff;
+	margin-bottom: 8px;
+	margin-left: 220px;
+}
+.suser  {
+	font-family: 'Open Sans', Arial, sans-serif;
+	position: relative;
+	display: inline-block;
+	margin: 20px 8px;
+	/* min-width: 230px;
+    max-width: 315px;
+    width: 100%; */
+	width: 530px;
+	color: #000;
+	text-align: left;
+	font-size: 16px;
+	background: #fff;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+.suser {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+#main_board .suser img {
+  width: 80px; height: 80px; border-radius: 50%;
+  margin-top: -35px;
+  margin-left: 75%;
+  margin-bottom: 15px;
+  backface-visibility: hidden;
+  vertical-align: top;
+}
+
+.suser figcaption {
+  position: absolute;
+  top: 0;
+  right: 40%;
+  left: 0;
+  bottom: 0;
+  padding: 15px;
+}
+
+.suser h3 {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: normal;
+}
+.suser span {
+	display: block;
+	margin-left:10px;
+	margin-bottom: 10px;
+}
+/* 게시물없음 */
+#no_board {
+	width: 550px; height: 170px;
+	border: 1px solid #ccc; border-radius: 4px;
+	background: #ffffff;
+	color: #ccc;
+	text-align: center;
+	padding-top: 30px;
+}
+
+/* button css */
+.button_css_WR {
+	width: 60px;
+	background: #f44336;
+	border-radius: 4px;
+	color: #ffffff;
+	margin-bottom: 8px;
+	margin-left: 425px;
+}
+.button_css {
+	background: #f44336;
+	border-radius: 4px;
+	color: #ffffff;
+	margin-bottom: 8px;
+}
+#showMoreBtn {
+	margin: 0 auto;
+	width: 550px; height: 100px;
+	margin-bottom: 30px;
+	font-size: 24px;
+}
+
+/* board_write */
+.user_img p span {
+	font-size: 20px;
+}
+textarea {
+	resize: none;
+	margin-left: 8px;
+	margin-bottom: 8px;
+}
+#hashTag {
+	margin-left: 9px;
+	margin-bottom: 8px;
+}
+#input_file {
+	margin-left: 9px;
+	margin-bottom: 8px;
+}
+#fileName {
+	width: 200px;
+}
+
+/* board_read */
+#main_board img {
+	border-radius: 50%;
+	margin: 5px;
+	display: inline;
+}
+#main_board p {
+	display: inline;
+	vertical-align: 15px;
+}
+#main_board p span {
+	font-size: 20px;
+	margin-left: 5px;
+}
+#like {
+	font-size: 20px;
+	color: #f44336;
+}
+.read_board {
+	height: 100px;
+	border-top: 2px dotted #ccc;
+}
+.audio_place {
+	border-bottom: 2px dotted #ccc;
+}
+.align_center {
+	text-align: center;
+}
+#like_place {
+	border-bottom: 2px double #ccc;
+}
+.xbutton {
+	color: #f44336;
+	font-weight: bold;
+}
+#input_re {
+	width: 200px;
+}

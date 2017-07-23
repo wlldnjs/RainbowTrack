@@ -1,0 +1,22 @@
+package boardService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.ReplyDao;
+
+public class ReplyDeleteService implements BoardService {
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+		
+		int board_idx = Integer.parseInt(request.getParameter("board"));
+		int reply_idx = Integer.parseInt(request.getParameter("reply"));
+		
+		ReplyDao dao = ReplyDao.getInstance();
+		dao.deleteReply(board_idx, reply_idx);
+		
+		return "jsp/main/main.jsp";
+	}
+
+}

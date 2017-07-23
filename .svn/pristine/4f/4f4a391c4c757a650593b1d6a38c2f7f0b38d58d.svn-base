@@ -1,0 +1,280 @@
+/*초기화*/
+body, ul, h1, h2, h3, h4, h5, p, dl, dd { margin : 0; padding : 0; }
+li { list-style : none; }
+a { text-decoration : none; }
+img { border : 0; }
+address { font-style : normal; }
+small { font-size : 1em; }
+hr { display : none; }
+.hidden { position : absolute; left : -9999px; }
+/* index body 색상 */
+body {background-color: #ececec}
+
+/*index 헤더*/
+#index_header {width:1280px; margin: 0 auto;
+		background: url("../images/index_img.jpg") no-repeat; 
+		background-size: cover;
+		height: 500px;
+		position: relative;
+		border-top: 5px solid #f44336;
+		}
+#membership {position: absolute; top: 20px; right: 50px;}
+#membership li{position: relative; float: left; color: white;}
+#membership li a{color: white;}
+
+/* .index_btn {
+    background-color: #EC008C; Green
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+} */
+#login_btn {
+    /* background-color: #EC008C; */ /* Green */
+    background-color: transparent;
+    border: 1px solid #f44336;
+    color: #f44336;
+    padding: 8px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+#join_btn {
+    /* background-color: #EC008C; */ /* Green */
+    background-color: #f44336;
+    border: 1px solid #f44336;
+    color: #ffffff;
+    padding: 8px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* index 로그인/회원가입 다이얼로그*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+.login-page {
+  width: 360px;
+  /* padding: 8% 0 0; */
+  margin: auto;
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  /* margin: 0 auto 100px; */
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.form .button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #f44336;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form .button:hover,.form button:active,.form button:focus {
+  background: #f44336;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+.container .info span .fa {
+  color: #EF3B3A;
+}
+#id {
+	margin: 0;
+}
+.id_check {
+	font-size: 13px;
+	color: #f44336;
+	padding-top: -10px;
+}
+/* body {
+  background: #76b852; fallback for old browsers
+  background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+  background: -moz-linear-gradient(right, #76b852, #8DC26F);
+  background: -o-linear-gradient(right, #76b852, #8DC26F);
+  background: linear-gradient(to left, #76b852, #8DC26F);
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;      
+} */
+/* index section */
+#pattern {
+	background: #ffffff;
+	margin: 0 auto;
+	width: 1278px;
+	padding-top: 30px;
+	padding-bottom: 30px;
+	border: 1px solid #ccc;
+}
+#pt_wrap {
+	width: 1000px;
+	margin: 0 auto;
+}
+.topten_img {
+	width: 200px; height: 50px;
+	background: url("http://210.123.255.149:8080/rt_img/tt.png") no-repeat;
+	background-size: contain;
+}
+#pattern div {
+	overflow: hidden;
+	margin: 0 auto;
+}
+.topten_list {
+	margin-top: 30px;
+}
+
+.topten_list li{
+	width: 180px; height: 150px;
+	float: left;
+	margin-left: 15px;
+	background: #ececec;
+	text-align: center;
+	font-size: 100px;
+	margin-bottom: 15px;
+}
+
+#audioplayer{
+	/* padding: 70px 0 0 3px; */
+	width: 40px;
+	height: 40px;
+	border: 3px solid black;
+	border-radius: 50%;
+}
+
+#pButton{
+    height:40px; 
+    width: 40px;
+    border: none;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    float:left;
+    outline:none;
+}
+
+.play{background: url('http://www.alexkatz.me/codepen/img/play.png') ;
+	height:40px; 
+    width: 40px;
+    border: none;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    float:left;
+    outline:none;
+}
+
+.pause{background: url('http://www.alexkatz.me/codepen/img/pause.png') ;
+	height:40px; 
+    width: 40px;
+    border: none;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    float:left;
+    outline:none;
+    }
+
+#timeline{
+	display: none;
+	width: 400px;
+	height: 20px;
+	margin-top: 20px;
+	float: left;
+	border-radius: 15px;
+	background: rgba(0,0,0,.3);
+  
+}
+#playhead{
+	display: none;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	margin-top: 1px;
+	background: rgba(0, 0, 0,1);
+
+}
+
+.top_info {
+	font-size: 16px;
+}
+
+/* index 푸터 */
+#index_footer {
+	background: #f44336;
+	width:1280px; margin: 0 auto; height: 100px;
+	color: #fff;
+	}
+	
+#footer_content {
+	width: 300px;
+	margin-top: 10px;
+	padding-left: 130px;
+}

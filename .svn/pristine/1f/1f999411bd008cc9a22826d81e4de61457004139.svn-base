@@ -1,0 +1,43 @@
+package boardService;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.BoardBean;
+import dao.BoardDao;
+
+public class SearchService implements BoardService {
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+		
+		BoardDao boardDao = BoardDao.getInstance();
+		List<BoardBean> boardList = null;
+		
+		String search = request.getParameter("search");
+		char hash = search.charAt(0);
+		
+		if (hash != 35) {
+			boardList = boardDao.getBoardListFromId(search);
+			if (boardList == null) {
+				return ""; // TODO 검색한 아이디와 일치하는 아이디가 없다.
+			} else {
+				
+			}
+			
+		} else {
+			boardList = boardDao.getBoardListFromHashtag(search);
+			if (boardList == null) {
+				return ""; //TODO 검색한 해쉬택과 일치하는 해쉬택이 없다.
+			} else {
+				
+			}
+			
+		}
+		
+		return null;
+	}
+
+}

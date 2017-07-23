@@ -1,0 +1,36 @@
+package boardService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import bean.ReplyBean;
+import dao.ReplyDao;
+
+public class ReplyWriteService implements BoardService {
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+		
+		ReplyDao dao = ReplyDao.getInstance();
+		HttpSession session = request.getSession();
+		
+		String user_id = (String) session.getAttribute("id");
+		String reply = request.getParameter("reply");
+		int board_idx = Integer.parseInt(request.getParameter("board_idx"));
+		int reply_idx = dao.getLastReplyIdx(board_idx) + 1; 
+		
+		ReplyBean bean = new ReplyBean();
+		bean.setUser_id(user_id);
+		bean.setReply(reply);
+		bean.setBoard_idx(board_idx);
+		bean.setReply_idx(reply_idx);
+		
+		dao.insertReply(bean);
+		
+		String viewPage = "jsp/main/main.jsp";
+		
+		return viewPage;
+	}
+
+}

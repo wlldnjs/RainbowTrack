@@ -1,0 +1,26 @@
+package jsonService;
+
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import dao.ReplyDao;
+
+public class ReplyDeleteService implements JsonService {
+
+	@Override
+	public String process(HttpServletRequest request) {
+
+		int board_idx = Integer.parseInt(request.getParameter("boardIdx").trim());
+		int reply_idx = Integer.parseInt(request.getParameter("replyIdx").trim());
+		
+		ReplyDao dao = ReplyDao.getInstance();
+		boolean check = dao.deleteReply(board_idx, reply_idx);
+		String result = "{\"result\" : \"fail\"}";
+		if (check) {
+			result = "{\"result\" : \"success\"}";
+		}
+		return result;
+	}
+
+}

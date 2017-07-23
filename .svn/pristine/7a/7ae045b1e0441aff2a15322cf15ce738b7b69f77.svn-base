@@ -1,0 +1,42 @@
+package jsonService;
+
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+
+import dao.BoardDao;
+
+public class DeleteLikeUserService implements JsonService {
+
+	@Override
+	public String process(HttpServletRequest request) {
+		
+		String user_id = request.getParameter("user_id");
+		int boardIdx = Integer.parseInt(request.getParameter("boardIdx"));
+		
+		BoardDao boardDao = BoardDao.getInstance();
+		String likeUsers = boardDao.getLikeUsers(boardIdx);
+		StringTokenizer st = new StringTokenizer(likeUsers, "/");
+		StringBuilder sb = new StringBuilder();
+		
+		int likeCount = st.countTokens();
+		System.out.println("DeleteLikeUserService count : " + likeCount);
+		
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			if (!token.equals(user_id)) {
+				sb.append(token + "/");
+			}
+		}
+		
+		int result = boardDao.updateLikeUser(sb.toString(), boardIdx, likeCount-1);
+		if (result == 1) {
+			String success = "{\"success\" : \"true\"}";
+			System.out.println(success);
+			return success;
+		}
+		
+		return null;
+	}
+
+}

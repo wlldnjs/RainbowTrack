@@ -1,0 +1,503 @@
+<%@page import="boardService.BoardListView"%>
+<%@page import="boardService.BoardReadService"%>
+<%@page import="bean.*"%>
+<%@page import="dao.*"%>
+<%@page import="java.io.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<style>
+ #aPlayer > audio { width: 100% }
+        /* Chrome 29+ */
+@media screen and (-webkit-min-device-pixel-ratio:0)
+  and (min-resolution:.001dpcm) {
+       /* HIDE DOWNLOAD AUDIO BUTTON */
+     #aPlayer {
+           overflow: hidden;width: 390px; 
+        }
+
+    #aPlayer > audio { width: 420px; }
+}
+
+/* Chrome 22-28 */
+@media screen and(-webkit-min-device-pixel-ratio:0) {
+    
+      #aPlayer {
+           overflow: hidden;width: 390px; 
+        }
+
+    #aPlayer > audio { width: 420px; }
+}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+   
+<body>
+<div id="main_board">
+<c:if test="${ param.check == null }" >
+   <jsp:include page="../main/boardWrite.jsp"></jsp:include>
+</c:if>
+<c:if test="${ param.check != null }" >
+   <c:if test="${ param.check != sessionScope.id}" >
+   <!-- 검색된 유저 정보 -->
+ 		<div class="suser">
+			<figure id="userInfo">
+      			<img src="${ searchUser.image }"/>
+      			<figcaption>
+      				<h3>${ searchUser.id }</h3>
+      			</figcaption>
+      		</figure>
+      		<span>${ searchUser.name }</span>
+      		<span>
+      			<fmt:parseDate value="${ searchUser.birth }" pattern="yyyy-MM-dd" var="birthdate"/>
+      			<fmt:formatDate value="${birthdate}" dateStyle="medium"/>
+      		</span>
+      		<span>${ searchUser.email }</span>
+     	</div>
+      
+   <!-- 팔로우 기능 -->
+      	<form id=followForm action="../../UserController?command=following" method="post">
+         	<input id="id" type="hidden" name="id" value="${ sessionScope.id }"/>
+         	<input id="follow" type="hidden" name="follow" value="${ param.check }"/>
+         	<c:if test="${ param.follow == 'false' }">
+            	<input id="followBt" type="button" value="팔로우" class="follow_btn">
+         	</c:if>
+         	<c:if test="${ param.follow == 'true' }">
+            	<input id="followBt" type="button" value="팔로우 끊기" class="follow_btn">
+        	</c:if>
+      	</form>
+   </c:if>
+   <c:if test="${ param.check == 'noId' }">
+      존재하지 않는 아이디입니다.noTag
+   </c:if>
+   <c:if test="${ param.check == 'noTag' }">
+      검색하신 내용과 일치하는 HashTag이 없습니다. 다시 검색해주세요.
+   </c:if>
+   <c:if test="${ param.check != 'noId' }">
+      <c:if test="${ param.check != 'noTag' }">
+         <input type="hidden" id="searchId" value="${ param.check }">
+      </c:if>
+   </c:if>
+   <c:if test="${ param.check == sessionScope.id }">
+      <jsp:include page="../main/boardWrite.jsp"></jsp:include>
+   </c:if>
+</c:if>
+
+<c:if test="${ listView.boardList != null }">
+<c:forEach var="boardBean" items="${ listView.boardList }">
+
+   <table id="${ boardBean.idx }">
+      <tr>
+         <form id="frm">
+         <td>
+         	<a href="search.bd?search=${ boardBean.user_id }"><img width="40px" height="40px" src="${ boardBean.image }"></a>
+         	<p><span>${ boardBean.user_id }</span><p>
+         </td>
+         <td class="align_center">
+         	<fmt:parseDate value="${ boardBean.boardDate }" pattern="yyyy-MM-dd HH:mm:ss" var="date"/>
+            <fmt:formatDate value="${date}" dateStyle="medium" />
+            <fmt:formatDate value="${date}" type="time" timeStyle="short" />
+         </td>
+         <c:if test="${ boardBean.likeUser != null }">
+            <c:set var="finish" value="false" />
+            <c:forTokens var="token_id" items="${ boardBean.likeUser }" delims="/" >
+               <c:if test="${ token_id == bean.id }">
+                  <td class="align_center"><i id="like" class="fa fa-heart" aria-hidden="true"></i></td>
+                  <c:set var="finish" value="true" />   
+               </c:if>
+            </c:forTokens>
+            <c:if test="${ finish == false }">
+               <td class="align_center"><i id="like" class="fa fa-heart-o" aria-hidden="true"></i></td>
+               <c:set var="finish" value="true" />         
+            </c:if>
+         </c:if>
+         <c:if test="${ boardBean.likeUser == null }">
+            <td><i id="like" class="fa fa-heart-o" aria-hidden="true"></i></td>
+         </c:if>
+         <td><input type="hidden" id="user_id" value="${ bean.id }"></td>
+         <td><input type="hidden" id="boardIdx" name="board_idx" value="${ boardBean.idx }" ></td>
+         <td><input type="button" value="담기" onclick="insertMusic(document.getElementById('user_id').value,boardIdx)" class="button_css"></td>
+      </form>
+         <c:if test="${ sessionScope.id == boardBean.user_id }">
+            <td><input type=image id="deleteBoard" align="right" src="../../images/x.png"/>
+            	<input type="hidden" id="deleteBoardIdx" name="board_idx" value="${ boardBean.idx }" >
+            </td>
+         </c:if>
+         <td><input type="hidden" id="likeCount" value="${ boardBean.likeCount }"></td>
+      </tr>
+      <tr>
+         <td colspan=6 class="read_board">${ boardBean.board }</td>
+      </tr>
+      <tr>
+         <td colspan=6 class="audio_place"><div id="aPlayer"><audio controls="controls" preload="none"  type="audio/mpeg" src="${ boardBean.musicFilePath }"></div></td>
+      </tr>
+      <tr>
+         <td>해시태그</td>
+         <td colspan=6>
+        
+         ${ boardBean.hashTags }</td>
+      </tr>
+      <tr>
+         <td colspan=6 id="like_place"><span id="${ boardBean.idx }">좋아요 ${ boardBean.likeCount }</span></td>
+      </tr>
+      
+      <c:forEach var="replyBean" items="${ boardBean.replyBeanList }">
+         <tr>
+            <td>${ replyBean.user_id }</td>
+            <td>${ replyBean.reply }</td>
+            <td colspan="4">
+            <fmt:parseDate value="${ replyBean.replyDate }" pattern="yyyy-MM-dd HH:mm:ss" var="redate"/>
+            <fmt:formatDate value="${redate}" dateStyle="medium" />
+            <fmt:formatDate value="${redate}" type="time" timeStyle="short" />
+            </td>
+            <c:if test="${ sessionScope.id == replyBean.user_id }">
+               <td><input type=image id="deleteReply" align="right" src="../../images/x.png"/>
+               <input type="hidden" id="deleteBoardIdx" value="${ replyBean.board_idx }">
+               <input type="hidden" id="deleteReplyIdx" value="${ replyBean.reply_idx }">
+               </td>
+            </c:if>
+         </tr>
+      </c:forEach>
+   <form id="replyFrm">
+      <tr>
+         <td>${ bean.id }</td>
+         <td><input type="text" placeholder="댓글을 입력하세요.." name ="reply" class="placeholder"></td>
+         <td><input id='replyBt' type="button" value="쓰기" class="button_css">
+            <input type="hidden" id="board_idx" name="board_idx" value="${ boardBean.idx }" >
+         </td>
+      </tr>
+   </form>
+</table>
+</c:forEach>
+</c:if>
+
+<!-- 더보기 버튼 -->
+<c:set var="length" value="${ fn:length(listView.boardList) }" />
+<c:if test="${ length == 10 }">
+<button id="showMoreBtn" type="button" name="" class="button_css">더보기</button>
+</c:if>
+</div>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script type="text/javascript">
+   function insertMusic(user_id,board_idx){
+      var id = user_id;
+      var idx = board_idx.value;
+      var name = prompt("저장할 제목을 입력해 주세요.")
+      location.href = "../../PlaylistController?command=insertList&id=" +id +"&idx=" +idx +"&name=" +name;
+   }
+   
+</script>
+<script>
+   
+   $(document).ready(function() {
+
+   });
+   
+   $(document).on("click", "#deleteBoard", function () {
+	   var i = $(this);
+	   var boardIdx = i.next().val();
+	   console.log(boardIdx);
+	   
+	   $.ajax({
+	      
+		   url : '../../JsonController/deleteBoard',
+	       type : "POST",
+	       dataType : "JSON",
+	       data : {
+	          "boardIdx" : boardIdx,
+	       },
+	       success : function(jsonData) {
+	          console.log(jsonData);
+	          if (jsonData.result == "success") {
+	        	  i.parents('table').remove();
+	          }
+	       },
+	       error : function() {
+	          alert("error");
+	       }
+	    });
+   });
+   
+   
+   $(document).on("click", "#deleteReply", function () {
+      var i = $(this);
+      var boardIdx = i.next().val();
+      var replyIdx = i.next().next().val();
+      
+      $.ajax({
+         url : '../../JsonController/deleteReply',
+         type : "POST",
+         dataType : "JSON",
+         data : {
+            "boardIdx" : boardIdx,
+            "replyIdx" : replyIdx
+         },
+         success : function(jsonData) {
+            console.log(jsonData);
+            if (jsonData.result == "success") {
+               i.parents('tr').remove();
+            }
+         },
+         error : function() {
+            alert("error");
+         }
+      });
+   });
+   
+   
+   $(document).delegate("#replyBt", "click", function() {
+      var bt = $(this);
+      var boardIdx = bt.next().val();
+      var replyText = bt.parent().prev().children();
+      var reply = replyText.val();
+      
+      if (reply != "" && reply != null) {
+         
+         $.ajax({
+            url : "../../JsonController/replyWrite",
+            type : "POST",
+            dataType : "JSON",
+            data : {
+               "boardIdx" : boardIdx,
+               "reply" : reply
+            },
+            success : function (jsonData) {
+               console.log(jsonData);
+               var reply = "<tr><td>" + jsonData.user_id + "</td>"
+                        + "<td>" + jsonData.reply + "</td>"
+                        + "<td>" + jsonData.replyDate + "</td>"
+                        + "<td>" + "<input type=image id=deleteReply align=right src='../../images/x.png'/>" 
+                      + "<input type=hidden id=deleteBoardIdx value=" + jsonData.boardIdx + ">"
+                      + "<input type=hidden id=deleteReplyIdx value=" + jsonData.replyIdx + "></td></tr>";      
+               var trs = $(bt).parents('table').find('tr');
+               trs.eq( trs.size() - 2).after(reply);
+               replyText.val("");
+            },
+            error : function() {
+               alert("error");
+            }
+         });
+         
+      } else {
+         alert("내용을 입력해주세요");
+      }
+   });
+   
+   
+   
+   $(document).delegate("#followBt", "click", function () {
+      var id = $("#id").val();
+      var follow = $("#follow").val();
+      console.log(follow);
+      $.ajax({
+         url : "../../JsonController/following",
+         type : "POST",
+         datatype : "JSON",
+         data : {
+            "id" : id,
+            "follow" : follow
+         },
+         success : function(jsonData, textStatus, jqXHR) {
+            console.log(jsonData);
+            if (jsonData.result == "follow") {
+               console.log("result is follow");
+               $("#followBt").val('팔로우 끊기');
+            } else {
+               console.log("result is cancle");
+               $("#followBt").val('팔로우');
+            }
+         },
+         error : function(xhr, status, error) {
+            alert("error");
+         }
+      });
+   });
+   
+   
+   $(document).delegate('i','click',function () {
+      
+      var i = $(this);
+      var boardIdx = $(this).parent().next().next().children().val(); // filter 써서 했는데 코드가 좀 지저분해서 나중에 바꿀 수 있으면 바꿔야지.
+      var user_id = $("#user_id").val();   
+      var likeCount = Number(i.parent().nextAll().find("#likeCount").val());
+      console.log(likeCount);
+      
+      if (i.attr("class") == "fa fa-heart-o") { // 좋아요 누름.
+      
+         $.ajax({
+            url : "../../JsonController/addLike",
+            type : "POST",   
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            data : {
+               "boardIdx" : boardIdx,
+               "user_id" : user_id
+            },
+            dataType : "json",
+            success: function(jsonData, textStatus, jqXHR) {
+//                test code
+//                console.log(jsonData);
+               var jsonString = JSON.stringify(jsonData);
+               console.log(jsonString);
+//                var jsonAll = JSON.parse(jsonString);  이건 안되고 밑에 parseJSON 은 되네..
+               var jsonAll = $.parseJSON(jsonString);
+               var jsonBoard = jsonAll.jsonBoard;
+               console.log(jsonBoard);
+//                 test code end 
+               if (jsonData != null) {
+                  $(i).removeClass("fa fa-heart-o").addClass("fa fa-heart");
+                  likeCount += 1;
+                  i.parents('tr').nextAll().find('span').html("좋아요   " + likeCount);
+                  i.parent().nextAll().find("#likeCount").val(likeCount);
+               }
+            },
+            error: function(xhr, status, error) {
+               alert("에러발생");
+               console.log(status);
+               console.log(xhr);
+               console.log(error);
+            }         
+         }); // end ajax 
+      } else {  // 좋아요 취소
+         $.ajax({
+            url : "../../JsonController/deleteLike",
+            type : "POST",   
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            data : {
+               "boardIdx" : boardIdx,
+               "user_id" : user_id
+            },
+            dataType : "json",
+            success: function(jsonData, textStatus, jqXHR) {
+               console.log(jsonData);
+
+               if (jsonData.success == "true") {
+                  $(i).removeClass("fa fa-heart").addClass("fa fa-heart-o");
+                  likeCount -= 1;
+                  i.parents('tr').nextAll().find('span').html("좋아요   " + likeCount);
+                  i.parent().nextAll().find("#likeCount").val(likeCount);
+               }
+            },
+            error: function(xhr, status, error) {
+               alert("에러발생");
+               console.log(status);
+               console.log(xhr);
+               console.log(error);
+            }         
+         });
+      }
+   }); 
+   
+   var pageNum = 1;
+   
+   function showBoards() {
+      
+      pageNum++;
+      var myId = $("#user_id").val();
+      var searchId = $("#searchId").val();
+      
+      $.ajax({
+         url : "../../JsonController/showBoards",
+         type : "POST",
+         data : {
+            "pageNum" : pageNum,
+            "searchId" : searchId
+         },
+         dataType : "JSON",
+         success : function(jsonData, textStatus, jqXHR) {
+            
+            var length = jsonData.length;
+            
+            $(jsonData).each(function (index, jsonBoard){
+               var jsonReply = jsonBoard.jsonReply;
+              
+               var board = "<table id=" + jsonBoard.idx + "><tr><form id=frm>" 
+                  + "<td><a href=search.bd?search=" + jsonBoard.user_id + "><img width=40px height=40px src=" + jsonBoard.image 
+                  + "></a><p><span>" + jsonBoard.user_id + "</span><p></td><td class=align_center>"
+                  + jsonBoard.boarddate + "</td>" ;
+                  
+               
+                if (jsonBoard.likeusers != "" && jsonBoard.likeusers != null && jsonBoard.likeusers != undefined) {
+                   var finish = false;
+                   $(jsonBoard.likeusers).each(function (index2, user) {
+                      if (myId == user) {
+                         board += "<td class=align_center><i id=like class='fa fa-heart' aria-hidden=true></i></td>"; 
+                         finish = true;
+                      }
+                   });
+                   if (!finish) {
+                      board += "<td class=align_center><i id=like class='fa fa-heart-o' aria-hidden=true></i></td>";    
+                   }
+                } else {
+                   board += "<td class=align_center><i id=like class='fa fa-heart-o' aria-hidden=true></i></td>";
+                }
+                board += "<td><input type=hidden id=user_id value=" + myId + "></td>" 
+                  + "<td><input type=hidden id=boardIdx name=board_idx value=" + jsonBoard.idx + " ></td>" 
+                  + "<td><input type=button class=button_css value=담기 onclick=\"insertMusic(document.getElementById('" + myId + "').value,boardIdx)\"" 
+                  + "></td></form>"
+                  + "<td><input type=hidden id=likeCount value=" + jsonBoard.likecount +"></td>";
+                  
+                if (myId == jsonBoard.user_id) {
+                   board += "<td><input type=image id='deleteBoard' align='right' src='../../images/x.png'/>"
+                   		+"<input type=hidden id=deleteBoardIdx name=board_idx value= " + jsonBoard.idx + "></td>";
+                }  
+                board += "</tr><tr><td colspan=6 class=read_board>" + jsonBoard.board 
+                  + "</td></tr><tr><td colspan=6 class=audio_place><div id=aPlayer><audio controls=controls preload=none type=audio/mpeg " 
+                  + " src=" + jsonBoard.musicfilepath + "></div></td></tr>" 
+                  + "<tr><td>해시태그</td>";
+                if (jsonBoard.hashtags != null) {
+                   board += "<td colspan=6>" + jsonBoard.hashtags + "</td></tr><tr>";
+                } else {
+                   board += "<td colspan=2></td></tr><tr>";
+                }
+                board += "<td colspan=3>좋아요 " + jsonBoard.likecount + "</td></tr>";
+                
+                if (jsonReply != "" && jsonReply != null && jsonReply != undefined) {
+                   $.each(jsonReply, function (index3, replyBean){
+                      board += "<tr><td>" + replyBean.user_id 
+                         + "</td><td>" + replyBean.reply + "</td><td>" + replyBean.replydate
+                         + "</td>";
+                         
+                      if (myId == replyBean.user_id) {
+                         board +=  "<td>" + "<input type=image id=deleteReply align=right src='../../images/x.png'/>" 
+                            + "<input type=hidden id=deleteBoardIdx value=" + replyBean.boardIdx + ">"
+                            + "<input type=hidden id=deleteReplyIdx value=" + replyBean.replyIdx + "></td></tr>";
+                      }
+                   }); 
+                }
+               board += "<form id='replyFrm'>" 
+                   + "<tr><td>" + myId 
+                   + "</td><td><input type=text placeholder=\"댓글을 입력하세요..\" name=reply class=placeholder></td>"
+                   + "<td><input id='replyBt' type=button value=쓰기>"
+                   + "<input type=hidden id=board_idx name=board_idx value=" + jsonBoard.idx
+                   + "></td></tr></form></table>"; 
+               $("#main_board table:last").after(board);  
+            });
+            if (length < 10) {
+               $("#showMoreBtn").remove();
+            }
+         },
+         error : function(xhr, status, error) {
+            alert("showMore 에러발생");
+            console.log(status);
+            console.log(xhr);
+            console.log(error);
+         }
+      });
+   }
+   
+   
+   $("#showMoreBtn").click(showBoards);
+   
+</script>
+
+</body>
+</html>

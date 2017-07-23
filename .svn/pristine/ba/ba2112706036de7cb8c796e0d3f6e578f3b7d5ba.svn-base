@@ -1,0 +1,224 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import bean.UserBean;
+import db.DBAction;
+import util.JdbcUtil;
+
+public class UserDao {
+	DBAction db = DBAction.getInstance();
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	ResultSet rs = null;
+	String sql = "";
+
+	private static UserDao instance;
+
+	public static UserDao getInstance() {
+		if (instance == null) {
+			instance = new UserDao();
+		}
+		return instance;
+	}
+
+	/**
+	 * 회원가입시 유저의 정보를 저장하는 역할. true를 반환하면 insert 성공, false를 반환하면 insert 에러 발생
+	 */
+	public boolean insertUser(UserBean bean) {
+		sql = "insert into rt_user(id,pw,name,phoneNum,email,birth) values(?,?,?,?,?,?)";
+		boolean check = false;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, bean.getId());
+			pstmt.setString(2, bean.getPw());
+			pstmt.setString(3, bean.getName());
+			pstmt.setString(4, bean.getPhoneNum());
+			pstmt.setString(5, bean.getEmail());
+			pstmt.setString(6, bean.getBirth());
+			int result = pstmt.executeUpdate();
+			if (result < 1) {
+				System.out.println("insert 에러 발생.");
+			} else {
+				check = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(pstmt);
+		}
+		return check;
+	}
+
+	/**
+	 * 로그인 시 유저의 id와 pw가 일치하는지 체크하는 역할. return값에 따라 0-정상로그인, 1-id 없음, 2-pw 틀림
+	 */
+	public int loginUser(String id, String pw) {
+		sql = "select pw from rt_user where id='" + id + "'";
+		boolean check = false;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				// id 있음
+				if (pw.equals(rs.getString("pw"))) {
+					// 로그인 성공
+					return 0;
+				} else {
+					// pw 틀림
+					System.out.println("LoginUser : pw가 틀립니다.");
+					return 2;
+				}
+			} else {
+				// id 부재로 인한 로그인 실패
+				System.out.println("LoginUser : id가 없습니다.");
+				return 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(rs);
+			JdbcUtil.close(stmt);
+		}
+		return 0;
+	}
+
+	/**
+	 * 로그인 한 유저의 정보를 select 하여 bean에 데이터를 set 해주는 역할. return값이 true일 때 성공,
+	 * false일 때 실패.
+	 */
+	public UserBean selectUser(String id) {
+
+		sql = "select * from rt_user where id='" + id + "'";
+		UserBean bean = new UserBean();
+
+		boolean check = false;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				bean.setId(rs.getString("id"));
+				bean.setPw(rs.getString("pw"));
+				bean.setName(rs.getString("name"));
+				bean.setPhoneNum(rs.getString("phoneNum"));
+				bean.setEmail(rs.getString("email"));
+				bean.setBirth(rs.getString("birth"));
+				bean.setImage(rs.getString("image"));
+				bean.setFollower(rs.getString("follower"));
+				bean.setFollowing(rs.getString("following"));
+				check = true;
+			} else {
+				// select 에러 발생
+				System.out.println("selectUser : 유저 정보를 불러올 수 없습니다.");
+				return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(rs);
+			JdbcUtil.close(stmt);
+		}
+		return bean;
+	}
+
+	/**
+	 * 회원가입 시, 유저의 ID가 중복되는지 확인해주는 역할. true를 반환하면 사용 가능, false를 반환하면 사용불가.
+	 */
+	public boolean idCheck(String id) {
+		sql = "select id from rt_user where id='" + id + "'";
+		boolean check = false;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				// id 중복
+			} else {
+				// id 중복되지 않음.
+				check = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(rs);
+			JdbcUtil.close(stmt);
+		}
+		return check;
+	}
+
+	/**
+	 * 회원정보 수정 역할.(업데이트)
+	 */
+	public boolean modifyUser(UserBean bean) {
+
+		sql = "update rt_user set pw=?,phoneNum=?,email=? where id=?";
+		boolean check = false;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, bean.getPw());
+			pstmt.setString(2, bean.getPhoneNum());
+			pstmt.setString(3, bean.getEmail());
+			pstmt.setString(4, bean.getId());
+
+			int result = pstmt.executeUpdate();
+			if (result < 1) {
+				System.out.println("회원정보 수정 메소드 오류");
+			} else {
+				check = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(pstmt);
+		}
+		return check;
+	}
+
+	public void resignUser(String id) {
+
+		sql = "delete from rt_user where id = ? ";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println("resignUser method error");
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(pstmt);
+		}
+
+	}
+
+	/**
+	    * 프로필 사진 수정 역할.(업데이트)
+	    */
+	   public boolean imageUser(UserBean bean) {
+		   sql = "update rt_user set image=? where id=?";
+		   boolean check = false;
+		   try{
+			   pstmt = conn.prepareStatement(sql);
+			   pstmt.setString(1, bean.getImage());
+			   pstmt.setString(2, bean.getId());
+			   
+			   int result = pstmt.executeUpdate();
+			   if (result < 1) {
+					System.out.println("프로필 사진 수정 메소드 오류");
+				} else {
+					check = true;
+				}
+		   } catch(SQLException e){
+			   e.printStackTrace();
+		   } finally {
+			   JdbcUtil.close(pstmt);
+		   }
+		   return check;
+	   }
+}

@@ -1,0 +1,28 @@
+package boardService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.ServiceBean;
+import dao.BoardDao;
+import dao.ReplyDao;
+
+public class BoardDeleteService implements BoardService {
+
+	@Override
+	public ServiceBean process(HttpServletRequest request, HttpServletResponse response) {
+		
+		int board_idx = Integer.parseInt(request.getParameter("board"));
+		BoardDao boardDao = BoardDao.getInstance();
+		ReplyDao replyDao = ReplyDao.getInstance();
+		ServiceBean serviceBean = new ServiceBean();
+		
+		replyDao.deleteAllReplyByIdx(board_idx);
+		boardDao.deleteBoardByIdx(board_idx);
+		
+//		serviceBean.setViewPage("jsp/main/main.jsp"); // TODO url pattern Àû¿ë Áß.
+		serviceBean.setViewPage("boardRead.bd");
+		return serviceBean;
+	}
+
+}

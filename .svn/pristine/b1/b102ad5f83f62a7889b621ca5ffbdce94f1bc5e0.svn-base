@@ -1,0 +1,7 @@
+# BoardService 
+boardWrite=boardService.BoardWriteService
+boardRead=boardService.BoardReadService
+replyWrite=boardService.ReplyWriteService
+boardDelete=boardService.BoardDeleteService
+replyDelete=boardService.ReplyDeleteService
+search=boardService.SearchService

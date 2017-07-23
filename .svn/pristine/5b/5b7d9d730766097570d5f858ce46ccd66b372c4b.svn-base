@@ -1,0 +1,2 @@
+addLike=jsonService.AddLikeService
+deleteLike=jsonService.DeleteLikeUserService

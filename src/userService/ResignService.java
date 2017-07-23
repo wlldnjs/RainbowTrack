@@ -1,0 +1,41 @@
+package userService;
+
+import java.util.Hashtable;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.BoardDao;
+import dao.PlaylistDao;
+import dao.ReplyDao;
+import dao.UserDao;
+
+public class ResignService implements UserService {
+
+	@Override
+	public String process(HttpServletRequest request, HttpServletResponse response) {
+
+		HttpSession session = request.getSession(false);
+		ServletContext application = request.getServletContext();
+		Hashtable<String, String> idList = (Hashtable<String, String>) application.getAttribute("idList");
+		
+		String id = (String) session.getAttribute("id");
+		
+		UserDao userDao = UserDao.getInstance();
+		BoardDao boardDao = BoardDao.getInstance();
+		ReplyDao replyDao = ReplyDao.getInstance();
+		PlaylistDao playListDao = PlaylistDao.getInstance();
+		idList.remove(id);
+		session.invalidate();
+		
+		playListDao.deleteListById(id);
+		replyDao.deleteAllReplyById(id);
+		boardDao.deleteBoardById(id);
+		userDao.resignUser(id);
+		
+		return "jsp/index/index.jsp?url=../main/resign_page.jsp"; 
+	}
+
+}

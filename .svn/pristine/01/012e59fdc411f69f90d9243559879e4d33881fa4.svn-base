@@ -1,0 +1,93 @@
+package jsonService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+
+import bean.BoardBean;
+import bean.ReplyBean;
+import dao.BoardDao;
+import dao.ReplyDao;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+public class ShowBoardsService implements JsonService {
+
+	private static final int BOARD_COUNT_PER_PAGE = 10;
+
+	@Override
+	public String process(HttpServletRequest request) {
+
+		int pageNum = Integer.parseInt(request.getParameter("pageNum").trim());
+		System.out.println("ShowBoardsService pageNum : " + pageNum);
+		String searchId = request.getParameter("searchId");
+		System.out.println("ShowBoardsService searchId : " + searchId);
+		
+		BoardDao boardDao = BoardDao.getInstance();
+		ReplyDao replyDao = ReplyDao.getInstance();
+
+		List<BoardBean> boardList = null;
+		int firstRow = 0;
+		int endRow = 0;
+
+		firstRow = (pageNum - 1) * BOARD_COUNT_PER_PAGE + 1;
+		endRow = firstRow + BOARD_COUNT_PER_PAGE - 1;
+		if(searchId != null) {
+			boardList = boardDao.getBoardListFromId(searchId, firstRow, endRow);
+		} else {
+			boardList = boardDao.getBoardList(firstRow, endRow);
+		}
+
+		JSONObject jsonBoard = new JSONObject();
+		JSONObject jsonReply = new JSONObject();
+		JSONObject reply = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+
+		if (boardList != null) {
+			for (int i = 0; i < boardList.size(); i++) {
+
+				BoardBean boardBean = boardList.get(i);
+				jsonBoard.put("user_id", boardBean.getUser_id());
+				jsonBoard.put("board", boardBean.getBoard());
+				jsonBoard.put("boarddate", boardBean.getBoardDate());
+				jsonBoard.put("hashtags", boardBean.getHashTags());
+				jsonBoard.put("idx", boardBean.getIdx());
+				jsonBoard.put("musicfilepath", boardBean.getMusicFilePath());
+				String likeUser = boardBean.getLikeUser();
+				if (likeUser != null) {
+					StringTokenizer st = new StringTokenizer(likeUser, "/");
+					List<String> likeUserList = new ArrayList<String>();
+					while (st.hasMoreTokens()) {
+						likeUserList.add(st.nextToken());	
+						System.out.println("ShowBoardsService likeUserList : " + likeUserList);
+					}
+					jsonBoard.put("likeusers", likeUserList);
+				} else {
+					jsonBoard.put("likeusers", "");
+				}
+				jsonBoard.put("image", boardBean.getImage());
+				jsonBoard.put("likecount", boardBean.getLikeCount());
+				
+				List<ReplyBean> replyBeanList = replyDao.getAllReply(boardBean.getIdx());
+				if (replyBeanList != null) {
+					for (int j = 0; j < replyBeanList.size(); j++) {
+						ReplyBean replyBean = replyBeanList.get(j);
+						reply.put("user_id", replyBean.getUser_id());
+						reply.put("reply", replyBean.getReply());
+						reply.put("replydate", replyBean.getReplyDate());
+						reply.put("boardIdx", replyBean.getBoard_idx());
+						reply.put("replyIdx", replyBean.getReply_idx());
+						jsonReply.put("reply" + j, reply);
+					}
+				}
+				jsonBoard.put("jsonReply", jsonReply);
+				jsonArray.add(jsonBoard);
+			}
+			return jsonArray.toString();
+		}
+		return null;
+	}
+
+}

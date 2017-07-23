@@ -1,0 +1,125 @@
+package controller;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.ServiceBean;
+import boardService.BoardService;
+import util.JdbcUtil;
+
+/**
+ * Servlet implementation class BoardController
+ */
+@WebServlet(urlPatterns = "*.bd", initParams = {
+		@WebInitParam(name = "configFile", value = "WEB-INF/BoardService.properties") // 초기
+																						// 파라미터
+																						// 설정.
+})
+public class BoardController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	// BoardService에 대한 <명령어, 서비스 인스턴스> 매핑 정보를 boardServiceMap에 저장
+	private Map<String, BoardService> boardServiceMap = new HashMap<String, BoardService>();
+
+	// 초기 설정(생성자 또는 init)
+	public void init() throws ServletException {
+		String configFile = getInitParameter("configFile");
+		Properties prop = new Properties();
+		FileInputStream fis = null;
+
+		try {
+			String configFilePath = getServletContext().getRealPath(configFile);
+			fis = new FileInputStream(configFilePath);
+			prop.load(fis);
+		} catch (IOException e) {
+			System.out.println("IOException : " + e.getMessage());
+		} finally {
+			JdbcUtil.close(fis);
+		}
+
+		Iterator keyItorator = prop.keySet().iterator();
+		while (keyItorator.hasNext()) {
+			String command = (String) keyItorator.next();
+			System.out.println("boardService property command : " + command);
+			String serviceClassName = prop.getProperty(command);
+
+			try {
+				Class<?> serviceClass = Class.forName(serviceClassName);
+				BoardService boardServiceInstance = (BoardService) serviceClass.newInstance();
+				boardServiceMap.put(command, boardServiceInstance);
+			} catch (ClassNotFoundException e) {
+				System.out.println("ClassNotFoundException : " + e.getMessage());
+			} catch (InstantiationException e) {
+				System.out.println("InstantiationException : " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				System.out.println("IllegalAccessException : " + e.getMessage());
+			}
+		}
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		process(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		process(request, response);
+	}
+
+	private void process(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+//		String command = request.getParameter("command");
+		
+		String command = request.getRequestURI(); 
+		if (command.indexOf(request.getContextPath()) == 0) { 
+			System.out.println(request.getContextPath());
+			command = command.substring(request.getContextPath().length()); 
+			System.out.println(command);
+		}
+		 
+		
+		BoardService service = boardServiceMap.get(command);
+		
+		if (service == null) {
+			System.out.println("해당 Boardservice 객체 없음");
+		}
+		
+		ServiceBean serviceBean = null;
+		serviceBean = service.process(request, response);
+		
+		if (serviceBean.getListView() != null) {
+			request.setAttribute("listView", serviceBean.getListView());
+//			response.sendRedirect(serviceBean.getViewPage());
+			RequestDispatcher rd = request.getRequestDispatcher(serviceBean.getViewPage());
+			rd.forward(request, response);
+		} else {
+			response.sendRedirect(serviceBean.getViewPage());
+		}
+		
+		
+//		RequestDispatcher rd = request.getRequestDispatcher(viewPage);
+//		rd.forward(request, response);
+
+		// 주소창에 get방식 파라미터 숨기는 코드라고 함
+		/*
+		 * String command = request.getRequestURI(); if
+		 * (command.indexOf(request.getContextPath()) == 0) { command =
+		 * command.substring(request.getContextPath().length()); }
+		 */
+	}
+
+}

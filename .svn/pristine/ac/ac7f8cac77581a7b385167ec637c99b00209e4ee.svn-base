@@ -1,0 +1,77 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<div id="pattern" class="pattern">
+	<div id="pt_wrap">
+	<div class="topten_img"></div>
+	<div>
+		<ul class="topten_list">
+			<li id="top1"><a href="#">1</a></li>
+			<li id="top2"><a href="#">2</a></li>
+			<li id="top3"><a href="#">3</a></li>
+			<li id="top4"><a href="#">4</a></li>
+			<li id="top5"><a href="#">5</a></li>
+		</ul>
+	</div>
+	<div>
+		<ul class="topten_list">
+			<li id="top6"><a href="#">6</a></li>
+			<li id="top7"><a href="#">7</a></li>
+			<li id="top8"><a href="#">8</a></li>
+			<li id="top9"><a href="#">9</a></li>
+			<li id="top10"><a href="#">10</a></li>
+		</ul>
+	</div>
+	</div>
+	<!-- <ul class="grid">
+		<li>
+			<div>
+				<a href="#">1</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">2</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">3</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">4</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">5</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">6</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">7</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">8</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">9</a>
+			</div>
+		</li>
+		<li>
+			<div>
+				<a href="#">10</a>
+			</div>
+		</li>
+	</ul> -->
+</div>

@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<script>
+	function checkSearch(search_form){
+	    var search_form = document.search_form;
+	    if(!search_form.search.value){
+	       alert("검색내용을 입력하세요");
+	       return false;
+	    }
+	    return true;   
+	 }
+</script>
+
+<div id="main_header">
+   <div id="header_wrap">
+      <div id="logo">
+         <h2 class="hidden">로고 이미지</h2>
+         <c:if test="${ param.uri == 'userBoard.jsp' }" > 
+            <a href="jsp/main/main.jsp"><img alt="" src="images/RainbowTrack.png"></a>
+         </c:if>
+         <c:if test="${ param.uri != 'userBoard.jsp' }" >
+            <a href="main.jsp"><img alt="" src="../../images/RainbowTrack.png"></a>
+         </c:if>
+      </div>
+      <div id="search">
+      <c:if test="${ param.uri != 'userBoard.jsp' }" > 
+      <form method="post" action="../../BoardController?command=search&pageNum=1"
+      		onsubmit="return checkSearch();" name="search_form">
+         <div class="box">
+           <input class="search" name="search" type="text" placeholder="Search id or #what you want" />
+           <input class="submit" type="submit" value="⌕"/>
+         </div>
+      </form>
+      </c:if>
+      <c:if test="${ param.uri == 'userBoard.jsp' }" > 
+      <form method="post" action="BoardController?command=search&pageNum=1"
+      		onsubmit="return checkSearch();" name="search_form">
+         <div class="box">
+           <input class="search" name="search" type="text" placeholder="Search id or #what you want" />
+           <input class="submit" type="submit" value="⌕"/>
+         </div>
+      </form>
+      </c:if>
+      </div>
+      <!-- <div id="search">
+         <input type="text" placeholder="#해시태그 검색" id="input_text"> 
+         <input type="button" value="⌕" id="input_button" onclick="">
+      </div> -->
+   </div>
+</div>

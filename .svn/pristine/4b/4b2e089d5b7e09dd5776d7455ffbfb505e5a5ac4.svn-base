@@ -1,0 +1,20 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<link rel="Stylesheet" href="../index/css/ui-lightness/jquery-ui-1.10.4.custom.css"/>
+<Script type="text/javascript">
+   function ShowPlaylist(){
+      var show = window.open("playlist.jsp","","width=800, height=400",true);
+   }
+</Script>
+<div id="main_menu">
+   <div id="profile">
+      <a href="main.jsp?uri=userBoard.jsp"><img id="my_image" src="${bean.image}" /></a><br>
+      <a href="main.jsp"><%= session.getAttribute("id") %></a>
+   </div>
+   <ul>
+      <li><a href="main.jsp?uri=followList.jsp">FOLLOW</a></li>
+      <li><button id="playlist_btn" onclick="ShowPlaylist()">PLAYLIST</button></li>
+      <li><a href="main.jsp?uri=mypage.jsp">MYPAGE</a></li>
+      <li><input type="button" value="LOGOUT" onclick="href:location='../../UserController?command=logout'"></li>
+   </ul>
+</div>

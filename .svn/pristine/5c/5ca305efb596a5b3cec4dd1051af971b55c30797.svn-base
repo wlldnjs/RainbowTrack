@@ -1,0 +1,63 @@
+<%@page import="bean.FollowBean"%>
+<%@page import="userService.FollowListView"%>
+<%@page import="userService.FollowListService"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<div id="follow">
+<%
+	request.setCharacterEncoding("utf-8");
+	String myId = String.valueOf(session.getAttribute("id"));
+%>
+<h4>팔로워</h4>
+<%
+	FollowListService followListService = FollowListService.getInstance();
+	FollowListView followerData = followListService.FollowerListService(myId);
+	pageContext.setAttribute("followerData", followerData);
+%>
+
+<% if(followerData == null) {%>
+<h5>팔로워가 없습니다</h5>
+<%} else {%>
+<% for(FollowBean followBean : followerData.getFollowList()) {%>
+<figure class="snip1578">
+  <a href="search.bd?search=<%=followBean.getFollow()%>"><img src="<%=followBean.getImage() %>" /></a>
+  <figcaption>
+    <h3><%=followBean.getFollow() %></h3>
+    <div class="icons"><a href="#"><i class="ion-social-twitter"></i></a>
+      <a href="#"> <i class="ion-social-instagram-outline"></i></a>
+      <a href="#"> <i class="ion-social-github"></i></a>
+    </div>
+  </figcaption>
+</figure>
+<%} %>
+<%} %>
+
+
+
+<h4>팔로잉</h4>
+<%
+	FollowListView followingData = followListService.FollowingListService(myId);
+	pageContext.setAttribute("followingData", followingData);
+%>
+
+<% if(followingData == null) {%>
+<h5>팔로잉이 없습니다</h5>
+<%} else {%>
+<% for(FollowBean followBean : followingData.getFollowList()) {%>
+<figure class="snip1578">
+  <a href="search.bd?search=<%=followBean.getFollow()%>&follow=true"><img src="<%=followBean.getImage() %>" /></a>
+  <figcaption>
+    <h3><%=followBean.getFollow() %></h3>
+    <div class="icons"><a href="#"><i class="ion-social-twitter"></i></a>
+      <a href="#"> <i class="ion-social-instagram-outline"></i></a>
+      <a href="#"> <i class="ion-social-github"></i></a>
+    </div>
+  </figcaption>
+</figure>
+<%} %>
+<%} %>
+
+
+
+</div>

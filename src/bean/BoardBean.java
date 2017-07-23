@@ -1,0 +1,79 @@
+package bean;
+
+import java.util.List;
+
+public class BoardBean {
+	private String user_id;
+	private String board;
+	private String musicFilePath;
+	private String boardDate;
+	private String hashTags;
+	private String likeUser;
+	private int idx;
+	private List<ReplyBean> replyBeanList;
+	private String image;
+	private int likeCount;
+	
+	
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public String getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(String id) {
+		this.user_id = id;
+	}
+	public String getBoard() {
+		return board;
+	}
+	public void setBoard(String board) {
+		this.board = board;
+	}
+	public String getMusicFilePath() {
+		return musicFilePath;
+	}
+	public void setMusicFilePath(String musicFilePath) {
+		this.musicFilePath = musicFilePath;
+	}
+	public String getBoardDate() {
+		return boardDate;
+	}
+	public void setBoardDate(String boardDate) {
+		this.boardDate = boardDate;
+	}
+	public String getHashTags() {
+		return hashTags;
+	}
+	public void setHashTags(String hashTags) {
+		this.hashTags = hashTags;
+	}
+	public String getLikeUser() {
+		return likeUser;
+	}
+	public void setLikeUser(String likeUser) {
+		this.likeUser = likeUser;
+	}
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+	public List<ReplyBean> getReplyBeanList() {
+		return replyBeanList;
+	}
+	public void setReplyBeanList(List<ReplyBean> replyBeanList) {
+		this.replyBeanList = replyBeanList;
+	}
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+	
+}
